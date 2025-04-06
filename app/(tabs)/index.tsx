@@ -1,24 +1,56 @@
 // app/(tabs)/index.tsx
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'; // Removed Alert
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native'; // Added Alert
 import { useRouter } from 'expo-router';
+import * as Location from 'expo-location'; // Added Location
 
 export default function HomeScreen() {
   const router = useRouter();
 
-  const handleHelpPress = () => {
-    console.log("Help button pressed!");
-    router.push('/help');
+  const handleHelpPress = async () => {
+    try {
+      // Request location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'Location permission is required to send an alert.');
+        return;
+      }
+
+      // Get current location
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+
+      console.log("Help button pressed! Coordinates:", latitude, longitude);
+
+      // Send coordinates to Palantir API
+      const response = await fetch('https://palantir-api.example.com/notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          latitude,
+          longitude,
+          alertType: 'overdose',
+        }),
+      });
+
+      if (response.ok) {
+        Alert.alert('Alert Sent', 'Nearby providers have been notified.');
+      } else {
+        Alert.alert('Error', 'Failed to send alert. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending alert:', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    }
   };
 
   const handleProviderPress = () => {
     console.log("Provider button pressed!");
-    // Navigate to the provider authentication screen
-    router.push('/provider-auth'); // Changed this line
+    router.push('/provider-auth');
   };
 
-  // ... rest of the component (JSX and styles) remains the same
-  // Make sure the styles definition is still present below
   return (
       <View style={styles.container}>
         {/* Help Button (remains centered) */}
