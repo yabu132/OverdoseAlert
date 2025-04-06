@@ -1,74 +1,100 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// app/(tabs)/index.tsx
+import React from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'; // Removed Alert
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
+  const handleHelpPress = () => {
+    console.log("Help button pressed!");
+    router.push('/help');
+  };
+
+  const handleProviderPress = () => {
+    console.log("Provider button pressed!");
+    // Navigate to the provider authentication screen
+    router.push('/provider-auth'); // Changed this line
+  };
+
+  // ... rest of the component (JSX and styles) remains the same
+  // Make sure the styles definition is still present below
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+      <View style={styles.container}>
+        {/* Help Button (remains centered) */}
+        <TouchableOpacity
+          style={styles.helpButton}
+          onPress={handleHelpPress}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.helpButtonText}>help</Text>
+        </TouchableOpacity>
+
+        {/* Provider Button (positioned at the bottom) */}
+        <TouchableOpacity
+          style={styles.providerButton}
+          onPress={handleProviderPress}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.providerButtonText}>i'm a provider</Text>
+        </TouchableOpacity>
+      </View>
+    );
 }
 
+// Styles should remain here...
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+    paddingBottom: 100, // Keep or adjust this padding
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  helpButton: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.30,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  helpButtonText: {
+    color: 'white',
+    fontSize: 40,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  providerButton: {
     position: 'absolute',
+    bottom: 40,
+    width: '80%',
+    backgroundColor: '#007AFF',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  providerButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
