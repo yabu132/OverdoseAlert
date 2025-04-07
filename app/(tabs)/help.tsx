@@ -1,32 +1,42 @@
-// app/help.tsx
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Stack } from 'expo-router'; // Import Stack to configure header
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 export default function HelpScreen() {
+  // Mocked coordinates for demonstration
+  const latitude = 37.3692;
+  const longitude = -122.0344;
+
+  // State to control blinking
+  const [isTextVisible, setIsTextVisible] = useState(true);
+
+  useEffect(() => {
+    // Set up an interval to toggle the text visibility
+    const interval = setInterval(() => {
+      setIsTextVisible((prev) => !prev);
+    }, 500); // Blink every 500ms
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <>
-      {/* Configure the header for this screen */}
-      <Stack.Screen options={{ title: 'Assistance Requested' }} />
-      <View style={styles.container}>
-        <Text style={styles.messageText}>help is on the way</Text>
-      </View>
-    </>
+    <View style={styles.container}>
+      {isTextVisible && <Text style={styles.text}>Help is on the way!</Text>}
+      <Text style={styles.text}>Latitude: {latitude}</Text>
+      <Text style={styles.text}>Longitude: {longitude}</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-    padding: 20, // Add some padding
+    alignItems: 'center',
+    backgroundColor: '#AABD8C', // Updated background color
   },
-  messageText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333', // Dark grey color
+  text: {
+    fontSize: 18,
+    marginVertical: 10,
   },
 });

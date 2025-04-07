@@ -1,49 +1,13 @@
-// app/(tabs)/index.tsx
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native'; // Added Alert
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import * as Location from 'expo-location'; // Added Location
 
 export default function HomeScreen() {
   const router = useRouter();
 
-  const handleHelpPress = async () => {
-    try {
-      // Request location permissions
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'Location permission is required to send an alert.');
-        return;
-      }
-
-      // Get current location
-      const location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
-
-      console.log("Help button pressed! Coordinates:", latitude, longitude);
-
-      // Send coordinates to Palantir API
-      const response = await fetch('https://palantir-api.example.com/notify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          latitude,
-          longitude,
-          alertType: 'overdose',
-        }),
-      });
-
-      if (response.ok) {
-        Alert.alert('Alert Sent', 'Nearby providers have been notified.');
-      } else {
-        Alert.alert('Error', 'Failed to send alert. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error sending alert:', error);
-      Alert.alert('Error', 'An unexpected error occurred.');
-    }
+  const handleHelpPress = () => {
+    // Directly navigate to the help page
+    router.push('/help');
   };
 
   const handleProviderPress = () => {
@@ -52,42 +16,41 @@ export default function HomeScreen() {
   };
 
   return (
-      <View style={styles.container}>
-        {/* Help Button (remains centered) */}
-        <TouchableOpacity
-          style={styles.helpButton}
-          onPress={handleHelpPress}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.helpButtonText}>help</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Help Button */}
+      <TouchableOpacity
+        style={styles.helpButton}
+        onPress={handleHelpPress}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.helpButtonText}>help</Text>
+      </TouchableOpacity>
 
-        {/* Provider Button (positioned at the bottom) */}
-        <TouchableOpacity
-          style={styles.providerButton}
-          onPress={handleProviderPress}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.providerButtonText}>i'm a provider</Text>
-        </TouchableOpacity>
-      </View>
-    );
+      {/* Provider Button */}
+      <TouchableOpacity
+        style={styles.providerButton}
+        onPress={handleProviderPress}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.providerButtonText}>I'm a provider</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
-// Styles should remain here...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#E9E3B4', // Updated background color
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 100, // Keep or adjust this padding
+    paddingBottom: 100,
   },
   helpButton: {
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: 'red',
+    backgroundColor:  "#E0262D",
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: "#000",
@@ -95,7 +58,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.30,
+    shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
   },
@@ -107,9 +70,9 @@ const styles = StyleSheet.create({
   },
   providerButton: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 60,
     width: '80%',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#3E6990',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 15,
